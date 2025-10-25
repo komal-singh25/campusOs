@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusOS - Your Smart Digital Campus Hub</title>
+    <style>
+        :root {
+            --color-bg: #000000;
+            --color-surface: #0d0d1a;
+            --color-primary: #00ffff;
+            --color-secondary: #ff00ff;
+            --color-accent: #ffff00;
+            --color-text: #ffffff;
+            --color-text-dim: #8888aa;
+            --color-success: #00ff88;
+            --color-error: #ff3366;
+            --color-planet-1: #ff6b6b;
+            --color-planet-2: #4ecdc4;
+            --color-planet-3: #ffe66d;
+            --color-planet-4: #a8dadc;
+            --color-planet-5: #f1a7fe;
+            --color-planet-6: #95e1d3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000000;
+            background-image: 
+                radial-gradient(2px 2px at 20% 30%, white, transparent),
+                radial-gradient(2px 2px at 60% 70%, white, transparent),
+                radial-gradient(1px 1px at 50% 50%, white, transparent),
+                radial-gradient(1px 1px at 80% 10%, white, transparent),
+                radial-gradient(2px 2px at 90% 60%, white, transparent),
+                radial-gradient(1px 1px at 33% 80%, white, transparent),
+                radial-gradient(1px 1px at 15% 90%, white, transparent);
+            background-size: 200% 200%;
+            background-position: 0% 0%;
+            animation: stars 200s linear infinite;
+            color: var(--color-text);
+            overflow-x: hidden;
+        }
+
+        @keyframes stars {
+            from { background-position: 0% 0%; }
+            to { background-position: 100% 100%; }
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, rgba(13, 13, 26, 0.9) 0%, rgba(0, 0, 0, 0.95) 100%);
+            padding: 1.5rem 2rem;
+            border-bottom: 2px solid var(--color-primary);
+            box-shadow: 0 4px 20px rgba(0, 255, 255, 0.3), 0 0 40px rgba(255, 0, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #00ffff, #ff00ff, #ffff00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textShimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes textShimmer {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.5); }
+        }
+
+        .logo-text p {
+            font-size: 0.75rem;
+            color: var(--color-text-dim);
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--color-primary);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--color-text-dim);
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+        }
+
+        /* Map Section */
+        .map-section {
+            background: var(--color-surface);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .map-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .map-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .map-highlight {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid var(--color-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--color-primary);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .campus-map {
+            position: relative;
+            background: 
+                radial-gradient(2px 2px at 10% 20%, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(3px 3px at 85% 15%, rgba(255, 255, 255, 0.9), transparent),
+                radial-gradient(2px 2px at 30% 80%, rgba(255, 255, 255, 0.7), transparent),
+                radial-gradient(1px 1px at 70% 60%, rgba(255, 255, 255, 0.6), transparent),
+                radial-gradient(2px 2px at 50% 30%, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(1px 1px at 20% 50%, rgba(255, 255, 255, 0.5), transparent),
+                radial-gradient(3px 3px at 90% 70%, rgba(255, 255, 255, 0.9), transparent),
+                radial-gradient(2px 2px at 40% 10%, rgba(255, 255, 255, 0.7), transparent),
+                radial-gradient(1px 1px at 60% 90%, rgba(255, 255, 255, 0.6), transparent),
+                radial-gradient(2px 2px at 15% 70%, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(circle at 30% 40%, rgba(138, 43, 226, 0.15), transparent 40%),
+                radial-gradient(circle at 70% 60%, rgba(75, 0, 130, 0.12), transparent 35%),
+                radial-gradient(ellipse at center, #0a0a1a 0%, #000000 70%);
+            background-size: 100% 100%;
+            border-radius: 12px;
+            padding: 2rem;
+            min-height: 500px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            box-shadow: inset 0 0 100px rgba(0, 255, 255, 0.05);
+            overflow: hidden;
+        }
+
+        .campus-map::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.2) 0%, rgba(75, 0, 130, 0.1) 40%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .central-hub {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.8), rgba(75, 0, 130, 0.9));
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 40px rgba(138, 43, 226, 0.8), 0 0 80px rgba(138, 43, 226, 0.5), inset 0 0 30px rgba(255, 255, 255, 0.2);
+            transition: all 0.4s ease;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .central-hub::before {
+            content: '';
+            position: absolute;
+            width: 140%;
+            height: 140%;
+            border-radius: 50%;
+            border: 2px solid rgba(138, 43, 226, 0.5);
+            animation: hubPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes hubPulse {
+            0%, 100% { 
+                transform: scale(1); 
+                opacity: 0.5; 
+            }
+            50% { 
+                transform: scale(1.2); 
+                opacity: 0.8; 
+            }
+        }
+
+        .central-hub:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 0 60px rgba(138, 43, 226, 1), 0 0 120px rgba(138, 43, 226, 0.7), inset 0 0 40px rgba(255, 255, 255, 0.3);
+        }
+
+        .central-hub-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.25rem;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+        }
+
+        .central-hub-text {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: white;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+        .planets-container {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .planets-container.revealed {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .building {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 10;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .building::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: inherit;
+            filter: blur(20px);
+            opacity: 0.5;
+            z-index: -1;
+            transition: opacity 0.3s ease;
+        }
+
+        .building::after {
+            content: '';
+            position: absolute;
+            width: 140%;
+            height: 140%;
+            border-radius: 50%;
+            border: 2px solid currentColor;
+            opacity: 0.3;
+            box-shadow: 0 0 20px currentColor, inset 0 0 20px currentColor;
+            transition: all 0.3s ease;
+        }
+
+        .building:hover {
+            transform: scale(1.1);
+            z-index: 20;
+        }
+
+        .building:hover::before {
+            opacity: 1;
+            filter: blur(30px);
+        }
+
+        .building:hover::after {
+            opacity: 0.7;
+            box-shadow: 0 0 50px currentColor, 0 0 80px currentColor, inset 0 0 40px currentColor;
+        }
+
+        .building.active {
+            box-shadow: 0 0 40px currentColor, 0 0 70px currentColor;
+        }
+
+        .building-name {
+            font-weight: 700;
+            font-size: 2rem;
+            margin-bottom: 0.25rem;
+            text-shadow: 0 0 20px currentColor, 0 0 40px currentColor;
+            z-index: 1;
+            filter: drop-shadow(0 0 10px currentColor);
+        }
+
+        .building-type {
+            font-size: 0.7rem;
+            color: var(--color-text);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.9;
+            z-index: 1;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .planet-core {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: inherit;
+            box-shadow: inset -20px -20px 40px rgba(0, 0, 0, 0.5), 
+                        inset 20px 20px 40px rgba(255, 255, 255, 0.1);
+            z-index: -2;
+        }
+
+        /* Planet positions - stable spherical layout with deep violet spectrum */
+        .building:nth-child(1) { 
+            top: 8%; left: 12%; 
+            background: #4a148c;
+            color: #e1bee7;
+            box-shadow: 0 0 30px #4a148c;
+        }
+        .building:nth-child(2) { 
+            top: 15%; right: 15%; 
+            background: #6a1b9a;
+            color: #e1bee7;
+            box-shadow: 0 0 40px #6a1b9a;
+        }
+        .building:nth-child(3) { 
+            top: 45%; left: 10%; 
+            background: #7b1fa2;
+            color: #e1bee7;
+            box-shadow: 0 0 35px #7b1fa2;
+        }
+        .building:nth-child(4) { 
+            top: 40%; right: 15%; 
+            background: #8e24aa;
+            color: #e1bee7;
+            box-shadow: 0 0 35px #8e24aa;
+        }
+        .building:nth-child(5) { 
+            bottom: 15%; left: 18%; 
+            background: #9c27b0;
+            color: #e1bee7;
+            box-shadow: 0 0 40px #9c27b0;
+        }
+        .building:nth-child(6) { 
+            bottom: 18%; right: 22%; 
+            background: #ab47bc;
+            color: #e1bee7;
+            box-shadow: 0 0 35px #ab47bc;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: linear-gradient(135deg, rgba(13, 13, 26, 0.8) 0%, rgba(0, 0, 0, 0.9) 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-icon {
+            font-size: 1.25rem;
+        }
+
+        /* Events Feed */
+        .event-item {
+            background: linear-gradient(90deg, rgba(0, 255, 255, 0.1) 0%, rgba(255, 0, 255, 0.05) 100%);
+            border-left: 3px solid var(--color-primary);
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+        }
+
+        .event-item:hover {
+            background: linear-gradient(90deg, rgba(0, 255, 255, 0.2) 0%, rgba(255, 0, 255, 0.1) 100%);
+            transform: translateX(8px);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+
+        .event-tag {
+            display: inline-block;
+            background: var(--color-secondary);
+            color: white;
+            font-size: 0.65rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .event-time {
+            font-size: 0.75rem;
+            color: var(--color-text-dim);
+        }
+
+        /* Attendance Widget */
+        .attendance-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: conic-gradient(var(--color-primary) 0% 78%, rgba(0, 255, 255, 0.1) 78% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 1rem auto;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .attendance-inner {
+            width: 70px;
+            height: 70px;
+            background: radial-gradient(circle, rgba(13, 13, 26, 1) 0%, rgba(0, 0, 0, 1) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            border: 2px solid rgba(0, 255, 255, 0.3);
+        }
+
+        .attendance-percent {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--color-primary);
+        }
+
+        .timetable-today {
+            background: rgba(124, 58, 237, 0.1);
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .class-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .class-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(13, 13, 26, 0.95) 0%, rgba(0, 0, 0, 0.98) 100%);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 255, 255, 0.3);
+            border: 2px solid rgba(0, 255, 255, 0.4);
+            backdrop-filter: blur(20px);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--color-text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: var(--color-primary);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            color: var(--color-text);
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+        }
+
+        select.form-control {
+            cursor: pointer;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--color-text);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        /* Floating Feedback Button */
+        .feedback-float {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #ffff00, #ff9900);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(255, 255, 0, 0.5), 0 0 40px rgba(255, 255, 0, 0.3);
+            transition: all 0.3s;
+            z-index: 100;
+            animation: floatPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes floatPulse {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-10px) scale(1.05); }
+        }
+
+        .feedback-float:hover {
+            transform: scale(1.2) rotate(15deg);
+            box-shadow: 0 12px 32px rgba(255, 255, 0, 0.7), 0 0 60px rgba(255, 255, 0, 0.5);
+        }
+
+        /* Success Message */
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--color-success);
+            color: var(--color-success);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .success-message.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .smart-suggestion {
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 3px solid var(--color-accent);
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            display: none;
+        }
+
+        .smart-suggestion.active {
+            display: block;
+        }
+
+        .suggestion-icon {
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+
+            .header-stats {
+                display: none;
+            }
+
+            .campus-map {
+                min-height: 400px;
+            }
+
+            .building {
+                font-size: 0.75rem;
+                padding: 0.5rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .main-container {
+                padding: 0 1rem;
+            }
+
+            .header {
+                padding: 1rem;
+            }
+
+            .map-section {
+                padding: 1rem;
+            }
+
+            .feedback-float {
+                bottom: 1rem;
+                right: 1rem;
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">🎓</div>
+                <div class="logo-text">
+                    <h1>CampusOS</h1>
+                    <p>Your Smart Digital Campus Hub</p>
+                </div>
+            </div>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Events Today</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">78%</div>
+                    <div class="stat-label">Attendance</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">Notices</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Map Section -->
+        <div class="map-section">
+            <div class="map-header">
+                <h2 class="map-title">Interactive Campus Map</h2>
+                <div class="map-highlight">
+                    <span class="pulse-dot"></span>
+                    <span>3 Active Events</span>
+                </div>
+            </div>
+            <div class="campus-map" id="campusMap">
+                <div class="central-hub" id="centralHub" onclick="revealPlanets()">
+                    <div class="central-hub-icon">🌟</div>
+                    <div class="central-hub-text">Explore</div>
+                </div>
+                <div class="planets-container" id="planetsContainer">
+                    <div class="building active" data-building="auditorium">
+                        <div class="planet-core"></div>
+                        <div class="building-name">🌌</div>
+                        <div class="building-type">Milky Way</div>
+                    </div>
+                <div class="building" data-building="library">
+                    <div class="planet-core"></div>
+                    <div class="building-name">📚</div>
+                    <div class="building-type">Library</div>
+                </div>
+                <div class="building active" data-building="hostel">
+                    <div class="planet-core"></div>
+                    <div class="building-name">🏠</div>
+                    <div class="building-type">Hostel Hub</div>
+                </div>
+                <div class="building" data-building="cafeteria">
+                    <div class="planet-core"></div>
+                    <div class="building-name">🍽️</div>
+                    <div class="building-type">Solar Cafe</div>
+                </div>
+                <div class="building active" data-building="timetable">
+                    <div class="planet-core"></div>
+                    <div class="building-name">📅</div>
+                    <div class="building-type">Time Matrix</div>
+                </div>
+                <div class="building" data-building="sports">
+                    <div class="planet-core"></div>
+                    <div class="building-name">⚽</div>
+                    <div class="building-type">Sports Nexus</div>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <!-- Events Feed -->
+            <div class="card">
+                <h3 class="card-title">
+                    <span class="card-icon">📢</span>
+                    Today's Highlights
+                </h3>
+                <div id="eventsFeed">
+                    <div class="event-item">
+                        <span class="event-tag">EVENT</span>
+                        <div class="event-title">Tech Fest 2025</div>
+                        <div class="event-time">📍 Auditorium • 5:00 PM</div>
+                    </div>
+                    <div class="event-item">
+                        <span class="event-tag">CLUB</span>
+                        <div class="event-title">Coding Club Meetup</div>
+                        <div class="event-time">📍 Lab Complex • 3:00 PM</div>
+                    </div>
+                    <div class="event-item">
+                        <span class="event-tag">NOTICE</span>
+                        <div class="event-title">Mid-Sem Schedule Released</div>
+                        <div class="event-time">🕐 2 hours ago</div>
+                    </div>
+                    <div class="event-item">
+                        <span class="event-tag">EVENT</span>
+                        <div class="event-title">Hostel A Maintenance</div>
+                        <div class="event-time">📍 Hostel A • Tomorrow</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attendance & Timetable -->
+            <div class="card">
+                <h3 class="card-title">
+                    <span class="card-icon">📊</span>
+                    Your Dashboard
+                </h3>
+                <div class="attendance-circle">
+                    <div class="attendance-inner">
+                        <div class="attendance-percent">78%</div>
+                        <div style="font-size: 0.75rem; color: var(--color-text-dim);">Attendance</div>
+                    </div>
+                </div>
+                <div class="timetable-today">
+                    <strong style="font-size: 0.875rem;">Today's Classes</strong>
+                    <div class="class-item">
+                        <span>Data Structures</span>
+                        <span>9:00 AM</span>
+                    </div>
+                    <div class="class-item">
+                        <span>Algorithms</span>
+                        <span>11:00 AM</span>
+                    </div>
+                    <div class="class-item">
+                        <span>DBMS Lab</span>
+                        <span>2:00 PM</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card">
+                <h3 class="card-title">
+                    <span class="card-icon">⚡</span>
+                    Quick Actions
+                </h3>
+                <button class="btn btn-primary btn-full" onclick="openComplaintModal()">
+                    📝 File Complaint
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Feedback Button -->
+    <div class="feedback-float" onclick="openFeedbackModal()" title="Share Feedback">
+        💡
+    </div>
+
+    <!-- Building Detail Modal -->
+    <div class="modal" id="buildingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="buildingModalTitle">Building Details</h3>
+                <button class="close-btn" onclick="closeModal('buildingModal')">&times;</button>
+            </div>
+            <div id="buildingModalContent"></div>
+        </div>
+    </div>
+
+    <!-- Complaint Modal -->
+    <div class="modal" id="complaintModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">File a Complaint</h3>
+                <button class="close-btn" onclick="closeModal('complaintModal')">&times;</button>
+            </div>
+            <div class="success-message" id="complaintSuccess">
+                ✅ Your complaint has been logged successfully!
+            </div>
+            <form id="complaintForm" onsubmit="submitComplaint(event)">
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select class="form-control" id="complaintCategory" required onchange="updateSuggestion()">
+                        <option value="">Select category</option>
+                        <option value="hostel">Hostel Maintenance</option>
+                        <option value="academic">Academic Issue</option>
+                        <option value="tech">Technical Support</option>
+                        <option value="cafeteria">Cafeteria</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" id="complaintDescription" placeholder="Describe your issue..." required oninput="smartRouting()"></textarea>
+                </div>
+                <div class="smart-suggestion" id="smartSuggestion">
+                    <span class="suggestion-icon">💡</span>
+                    <span id="suggestionText"></span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Your Email (Optional)</label>
+                    <input type="email" class="form-control" placeholder="your.email@campus.edu">
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Submit Complaint</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div class="modal" id="feedbackModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Share Your Feedback</h3>
+                <button class="close-btn" onclick="closeModal('feedbackModal')">&times;</button>
+            </div>
+            <div class="success-message" id="feedbackSuccess">
+                🎉 Thanks! You just made CampusOS smarter 💡
+            </div>
+            <form id="feedbackForm" onsubmit="submitFeedback(event)">
+                <div class="form-group">
+                    <label class="form-label">How can we improve campus life?</label>
+                    <textarea class="form-control" id="feedbackText" placeholder="Share your ideas..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Rate your experience</label>
+                    <select class="form-control" required>
+                        <option value="">Select rating</option>
+                        <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                        <option value="4">⭐⭐⭐⭐ Good</option>
+                        <option value="3">⭐⭐⭐ Average</option>
+                        <option value="2">⭐⭐ Poor</option>
+                        <option value="1">⭐ Very Poor</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Submit Feedback</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Building data
+        const buildingData = {
+            auditorium: {
+                name: '🌌 Milky Way Galaxy - Auditorium',
+                type: 'Events & Seminars',
+                info: 'The central hub for all major events, seminars, and talks across the universe',
+                events: [
+                    { title: 'Tech Fest 2025 - Opening Ceremony', time: '5:00 PM Today', tag: 'EVENT' },
+                    { title: 'Guest Lecture: Quantum Computing by Dr. Sarah Chen', time: '11:00 AM Tomorrow', tag: 'SEMINAR' },
+                    { title: 'Industry Talk: AI in Healthcare - Google Health', time: 'Nov 2, 3:00 PM', tag: 'TALK' },
+                    { title: 'Workshop: Blockchain for Beginners', time: 'Nov 5, 2:00 PM', tag: 'WORKSHOP' }
+                ]
+            },
+            library: {
+                name: '📚 Central Library',
+                type: 'Knowledge Repository',
+                info: 'Infinite knowledge repository with 80,000+ books, digital archives, and research databases',
+                borrowedBooks: [
+                    { title: 'Introduction to Algorithms', author: 'Cormen et al.', dueDate: 'Oct 30, 2025', daysLeft: 5 },
+                    { title: 'Clean Code', author: 'Robert Martin', dueDate: 'Nov 2, 2025', daysLeft: 8 },
+                    { title: 'The Pragmatic Programmer', author: 'Hunt & Thomas', dueDate: 'Nov 8, 2025', daysLeft: 14 }
+                ],
+                availableBooks: [
+                    { title: 'Design Patterns', author: 'Gang of Four', copies: 3, location: 'CS-A-205' },
+                    { title: 'Computer Networks', author: 'Tanenbaum', copies: 5, location: 'CS-B-112' },
+                    { title: 'Operating Systems', author: 'Silberschatz', copies: 2, location: 'CS-A-301' },
+                    { title: 'Database Systems', author: 'Ramakrishnan', copies: 4, location: 'CS-C-150' }
+                ]
+            },
+            hostel: {
+                name: '🏠 Hostel Hub',
+                type: 'Residential Complex',
+                info: 'Multi-campus hostel network - Home away from home',
+                events: [
+                    { title: 'Hostel A - Cultural Night', time: 'Oct 28, 7:00 PM', tag: 'EVENT' },
+                    { title: 'Hostel B - Movie Screening: Interstellar', time: 'Oct 29, 8:00 PM', tag: 'ENTERTAINMENT' },
+                    { title: 'Hostel C - Birthday Bash', time: 'Oct 30, 6:00 PM', tag: 'CELEBRATION' },
+                    { title: 'All Hostels - Diwali Fest', time: 'Nov 1, 5:00 PM', tag: 'FESTIVAL' }
+                ],
+                hasComplaint: true
+            },
+            cafeteria: {
+                name: '🍽️ Solar Cafe',
+                type: 'Cosmic Dining',
+                info: 'Multi-cuisine dining powered by solar energy',
+                events: [
+                    { title: 'Special: North Indian Thali Week', time: 'This Week', tag: 'MENU' },
+                    { title: 'New: Continental Corner Opened', time: 'Today', tag: 'UPDATE' }
+                ]
+            },
+            timetable: {
+                name: '📅 Time Matrix - Academic Hub',
+                type: 'Schedule & Exams',
+                info: 'Your personalized academic timeline across all years',
+                years: {
+                    'Year 1': {
+                        schedule: [
+                            { day: 'Monday', classes: ['Calculus 9:00 AM', 'Physics 11:00 AM', 'Programming Lab 2:00 PM'] },
+                            { day: 'Tuesday', classes: ['Chemistry 9:00 AM', 'English 11:00 AM', 'Engineering Drawing 2:00 PM'] },
+                            { day: 'Wednesday', classes: ['Calculus 9:00 AM', 'Physics Lab 11:00 AM', 'Workshop 2:00 PM'] }
+                        ],
+                        exams: [
+                            { subject: 'Calculus Mid-Sem', date: 'Nov 5, 2025', time: '10:00 AM' },
+                            { subject: 'Physics Practical', date: 'Nov 8, 2025', time: '2:00 PM' }
+                        ]
+                    },
+                    'Year 2': {
+                        schedule: [
+                            { day: 'Monday', classes: ['Data Structures 9:00 AM', 'Algorithms 11:00 AM', 'DBMS Lab 2:00 PM'] },
+                            { day: 'Tuesday', classes: ['Computer Networks 9:00 AM', 'OS 11:00 AM', 'COA Lab 2:00 PM'] },
+                            { day: 'Wednesday', classes: ['Theory of Computation 9:00 AM', 'Discrete Math 11:00 AM'] }
+                        ],
+                        exams: [
+                            { subject: 'Data Structures Mid-Sem', date: 'Nov 7, 2025', time: '9:00 AM' },
+                            { subject: 'DBMS End-Sem', date: 'Dec 10, 2025', time: '10:00 AM' }
+                        ]
+                    },
+                    'Year 3': {
+                        schedule: [
+                            { day: 'Monday', classes: ['Machine Learning 9:00 AM', 'Web Tech 11:00 AM', 'Compiler Design 2:00 PM'] },
+                            { day: 'Tuesday', classes: ['AI 9:00 AM', 'Cloud Computing 11:00 AM', 'ML Lab 2:00 PM'] },
+                            { day: 'Wednesday', classes: ['Software Engineering 9:00 AM', 'Cyber Security 11:00 AM'] }
+                        ],
+                        exams: [
+                            { subject: 'Machine Learning Project', date: 'Nov 15, 2025', time: 'All Day' },
+                            { subject: 'AI Mid-Sem', date: 'Nov 12, 2025', time: '10:00 AM' }
+                        ]
+                    },
+                    'Year 4': {
+                        schedule: [
+                            { day: 'Monday', classes: ['Blockchain 9:00 AM', 'IoT 11:00 AM', 'Project Work 2:00 PM'] },
+                            { day: 'Tuesday', classes: ['Quantum Computing 9:00 AM', 'Big Data 11:00 AM'] },
+                            { day: 'Wednesday', classes: ['Entrepreneurship 9:00 AM', 'Seminar 11:00 AM'] }
+                        ],
+                        exams: [
+                            { subject: 'Final Year Project Review', date: 'Nov 20, 2025', time: '11:00 AM' },
+                            { subject: 'Blockchain End-Sem', date: 'Dec 5, 2025', time: '9:00 AM' }
+                        ]
+                    }
+                },
+                hasPlanner: true
+            },
+            sports: {
+                name: '⚽ Sports Nexus',
+                type: 'Multi-Campus Athletics',
+                info: 'State-of-the-art sports facilities across all campuses',
+                campuses: {
+                    'Main Campus': ['Cricket', 'Football', 'Basketball', 'Tennis', 'Badminton', 'Swimming', 'Gym'],
+                    'North Campus': ['Volleyball', 'Table Tennis', 'Squash', 'Yoga Studio', 'Athletics Track'],
+                    'South Campus': ['Hockey', 'Rugby', 'Boxing', 'Martial Arts', 'Rock Climbing', 'Indoor Games'],
+                    'East Campus': ['Chess', 'Archery', 'Shooting', 'Golf', 'Skating', 'Dance Studio']
+                },
+                events: [
+                    { title: 'Inter-Campus Cricket Tournament', time: 'Nov 10-15', tag: 'TOURNAMENT' },
+                    { title: 'Annual Sports Meet', time: 'Dec 1-3', tag: 'EVENT' }
+                ]
+            }
+        };
+
+        // Initialize building click handlers
+        document.querySelectorAll('.building').forEach(building => {
+            building.addEventListener('click', function() {
+                const buildingId = this.dataset.building;
+                showBuildingDetails(buildingId);
+            });
+        });
+
+        function showBuildingDetails(buildingId) {
+            const data = buildingData[buildingId];
+            if (!data) return;
+
+            const modal = document.getElementById('buildingModal');
+            const title = document.getElementById('buildingModalTitle');
+            const content = document.getElementById('buildingModalContent');
+
+            title.textContent = data.name;
+            
+            let contentHtml = `<p style="color: var(--color-text-dim); margin-bottom: 1.5rem;">${data.info}</p>`;
+            
+            // Library special content
+            if (buildingId === 'library') {
+                contentHtml += '<div style="margin-bottom: 1.5rem;"><strong style="color: var(--color-primary);">📚 Your Borrowed Books:</strong>';
+                data.borrowedBooks.forEach(book => {
+                    const urgency = book.daysLeft <= 5 ? 'color: var(--color-error);' : 'color: var(--color-success);';
+                    contentHtml += `
+                        <div class="event-item">
+                            <div class="event-title">${book.title}</div>
+                            <div class="event-time">by ${book.author}</div>
+                            <div style="font-size: 0.75rem; margin-top: 0.25rem; ${urgency}">
+                                Due: ${book.dueDate} (${book.daysLeft} days left)
+                            </div>
+                        </div>
+                    `;
+                });
+                contentHtml += '</div><div style="margin-bottom: 1.5rem;"><strong style="color: var(--color-primary);">✅ Available Books:</strong>';
+                data.availableBooks.forEach(book => {
+                    contentHtml += `
+                        <div class="event-item">
+                            <div class="event-title">${book.title}</div>
+                            <div class="event-time">by ${book.author}</div>
+                            <div style="font-size: 0.75rem; margin-top: 0.25rem; color: var(--color-success);">
+                                ${book.copies} copies available • Location: ${book.location}
+                            </div>
+                        </div>
+                    `;
+                });
+                contentHtml += '</div>';
+            }
+            
+            // Sports campus-wise facilities
+            if (buildingId === 'sports') {
+                contentHtml += '<div style="margin-bottom: 1.5rem;"><strong style="color: var(--color-primary);">🏟️ Campus-Wise Facilities:</strong>';
+                for (let campus in data.campuses) {
+                    contentHtml += `<div style="margin-top: 1rem;"><strong style="font-size: 0.875rem; color: var(--color-accent);">${campus}</strong><div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">`;
+                    data.campuses[campus].forEach(sport => {
+                        contentHtml += `<span style="background: rgba(0,255,255,0.1); border: 1px solid var(--color-primary); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">${sport}</span>`;
+                    });
+                    contentHtml += '</div></div>';
+                }
+                contentHtml += '</div>';
+            }
+            
+            // Timetable content
+            if (buildingId === 'timetable') {
+                contentHtml += '<div style="margin-bottom: 1rem;"><strong style="color: var(--color-primary);">📅 Select Your Year:</strong></div>';
+                contentHtml += '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1.5rem;">';
+                for (let year in data.years) {
+                    contentHtml += `<button class="btn btn-secondary" onclick="showYearSchedule('${year}')" style="padding: 0.5rem;">${year}</button>`;
+                }
+                contentHtml += '</div><div id="yearScheduleContent"></div>';
+            }
+            
+            // Events
+            if (data.events && data.events.length > 0) {
+                contentHtml += '<div style="margin-top: 1.5rem;"><strong style="color: var(--color-primary);">📢 Upcoming Events:</strong>';
+                data.events.forEach(event => {
+                    contentHtml += `
+                        <div class="event-item">
+                            <span class="event-tag">${event.tag}</span>
+                            <div class="event-title">${event.title}</div>
+                            <div class="event-time">${event.time}</div>
+                        </div>
+                    `;
+                });
+                contentHtml += '</div>';
+            }
+
+            let buttons = '<div style="margin-top: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">';
+            if (data.hasComplaint) {
+                buttons += `<button class="btn btn-primary" onclick="openComplaintModal('${buildingId}')">📝 File Complaint</button>`;
+            }
+            if (data.hasPlanner) {
+                buttons += `<button class="btn btn-primary" onclick="openPlannerModal()">📝 Student Planner</button>`;
+            }
+            buttons += `<button class="btn btn-secondary" onclick="closeModal('buildingModal')">Close</button></div>`;
+
+            content.innerHTML = contentHtml + buttons;
+
+            modal.classList.add('active');
+        }
+
+        function openComplaintModal(buildingId = '') {
+            closeModal('buildingModal');
+            document.getElementById('complaintModal').classList.add('active');
+            document.getElementById('complaintForm').reset();
+            document.getElementById('complaintSuccess').classList.remove('active');
+            document.getElementById('smartSuggestion').classList.remove('active');
+            
+            if (buildingId) {
+                const category = buildingId.includes('hostel') ? 'hostel' : 
+                               buildingId.includes('lab') ? 'tech' :
+                               buildingId.includes('cafeteria') ? 'cafeteria' : 'other';
+                document.getElementById('complaintCategory').value = category;
+                updateSuggestion();
+            }
+        }
+
+        function openFeedbackModal() {
+            document.getElementById('feedbackModal').classList.add('active');
+            document.getElementById('feedbackForm').reset();
+            document.getElementById('feedbackSuccess').classList.remove('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Smart routing for complaints
+        function smartRouting() {
+            const description = document.getElementById('complaintDescription').value.toLowerCase();
+            const suggestion = document.getElementById('smartSuggestion');
+            const suggestionText = document.getElementById('suggestionText');
+            
+            if (description.length < 5) {
+                suggestion.classList.remove('active');
+                return;
+            }
+
+            let route = '';
+            
+            if (description.includes('fan') || description.includes('ac') || description.includes('light') || description.includes('electricity')) {
+                route = 'Suggested: Hostel Maintenance Department';
+                document.getElementById('complaintCategory').value = 'hostel';
+            } else if (description.includes('wifi') || description.includes('internet') || description.includes('computer') || description.includes('lab')) {
+                route = 'Suggested: Technical Support Team';
+                document.getElementById('complaintCategory').value = 'tech';
+            } else if (description.includes('food') || description.includes('menu') || description.includes('cafeteria') || description.includes('mess')) {
+                route = 'Suggested: Cafeteria Management';
+                document.getElementById('complaintCategory').value = 'cafeteria';
+            } else if (description.includes('exam') || description.includes('marks') || description.includes('class') || description.includes('teacher')) {
+                route = 'Suggested: Academic Affairs';
+                document.getElementById('complaintCategory').value = 'academic';
+            }
+
+            if (route) {
+                suggestionText.textContent = route;
+                suggestion.classList.add('active');
+            } else {
+                suggestion.classList.remove('active');
+            }
+        }
+
+        function updateSuggestion() {
+            const category = document.getElementById('complaintCategory').value;
+            const suggestion = document.getElementById('smartSuggestion');
+            const suggestionText = document.getElementById('suggestionText');
+            
+            const suggestions = {
+                'hostel': 'Tip: Include room number and specific issue for faster resolution',
+                'academic': 'Tip: Mention subject code and faculty name if applicable',
+                'tech': 'Tip: Include device details and error messages if any',
+                'cafeteria': 'Tip: Mention date and meal time for better tracking'
+            };
+
+            if (category && suggestions[category]) {
+                suggestionText.textContent = suggestions[category];
+                suggestion.classList.add('active');
+            } else {
+                suggestion.classList.remove('active');
+            }
+        }
+
+        function submitComplaint(event) {
+            event.preventDefault();
+            
+            // In production, this would send data to backend
+            const formData = {
+                category: document.getElementById('complaintCategory').value,
+                description: document.getElementById('complaintDescription').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            console.log('Complaint submitted:', formData);
+            
+            document.getElementById('complaintSuccess').classList.add('active');
+            document.getElementById('complaintForm').reset();
+            document.getElementById('smartSuggestion').classList.remove('active');
+            
+            setTimeout(() => {
+                closeModal('complaintModal');
+            }, 2000);
+        }
+
+        function submitFeedback(event) {
+            event.preventDefault();
+            
+            // In production, this would send data to backend
+            const formData = {
+                feedback: document.getElementById('feedbackText').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            console.log('Feedback submitted:', formData);
+            
+            document.getElementById('feedbackSuccess').classList.add('active');
+            document.getElementById('feedbackForm').reset();
+            
+            setTimeout(() => {
+                closeModal('feedbackModal');
+            }, 2500);
+        }
+
+        // Close modals on outside click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+
+        function showYearSchedule(year) {
+            const data = buildingData.timetable.years[year];
+            const container = document.getElementById('yearScheduleContent');
+            
+            let html = `<div style="background: rgba(0,255,255,0.05); padding: 1rem; border-radius: 8px; border: 1px solid rgba(0,255,255,0.2);">`;
+            html += `<h4 style="color: var(--color-accent); margin-bottom: 1rem;">${year} Schedule</h4>`;
+            
+            data.schedule.forEach(day => {
+                html += `<div style="margin-bottom: 1rem;"><strong style="color: var(--color-primary);">${day.day}</strong><ul style="margin: 0.5rem 0; padding-left: 1.5rem; color: var(--color-text-dim);">`;
+                day.classes.forEach(cls => {
+                    html += `<li style="margin: 0.25rem 0;">${cls}</li>`;
+                });
+                html += '</ul></div>';
+            });
+            
+            html += '<div style="margin-top: 1.5rem;"><strong style="color: var(--color-error);">📝 Upcoming Exams:</strong>';
+            data.exams.forEach(exam => {
+                html += `
+                    <div class="event-item" style="border-left-color: var(--color-error);">
+                        <div class="event-title">${exam.subject}</div>
+                        <div class="event-time">📅 ${exam.date} • ${exam.time}</div>
+                    </div>
+                `;
+            });
+            html += '</div></div>';
+            
+            container.innerHTML = html;
+        }
+
+        function openPlannerModal() {
+            const plannerHtml = `
+                <div class="modal active" id="plannerModal" style="z-index: 1001;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">📝 Student Planner</h3>
+                            <button class="close-btn" onclick="closeModal('plannerModal')">&times;</button>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Task Title</label>
+                            <input type="text" class="form-control" id="taskTitle" placeholder="e.g., Complete Assignment 3">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Due Date</label>
+                            <input type="date" class="form-control" id="taskDate">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Priority</label>
+                            <select class="form-control" id="taskPriority">
+                                <option value="high">🔴 High</option>
+                                <option value="medium">🟡 Medium</option>
+                                <option value="low">🟢 Low</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-control" id="taskNotes" placeholder="Additional details..."></textarea>
+                        </div>
+                        <button class="btn btn-primary btn-full" onclick="savePlannerTask()">Add to Planner</button>
+                        <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(0,255,255,0.05); border-radius: 8px; border: 1px solid rgba(0,255,255,0.2);">
+                            <strong>📋 Your Tasks:</strong>
+                            <div id="tasksList" style="margin-top: 0.5rem; color: var(--color-text-dim); font-size: 0.875rem;">No tasks yet. Add your first task!</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', plannerHtml);
+        }
+
+        function savePlannerTask() {
+            const title = document.getElementById('taskTitle').value;
+            const date = document.getElementById('taskDate').value;
+            const priority = document.getElementById('taskPriority').value;
+            
+            if (title && date) {
+                const tasksList = document.getElementById('tasksList');
+                const priorityIcon = priority === 'high' ? '🔴' : priority === 'medium' ? '🟡' : '🟢';
+                tasksList.innerHTML += `<div class="event-item"><div class="event-title">${priorityIcon} ${title}</div><div class="event-time">Due: ${date}</div></div>`;
+                
+                document.getElementById('taskTitle').value = '';
+                document.getElementById('taskDate').value = '';
+                document.getElementById('taskNotes').value = '';
+            }
+        }
+
+        // Reveal planets function
+        function revealPlanets() {
+            const hub = document.getElementById('centralHub');
+            const planetsContainer = document.getElementById('planetsContainer');
+            
+            hub.style.opacity = '0';
+            hub.style.transform = 'translate(-50%, -50%) scale(0)';
+            
+            setTimeout(() => {
+                hub.style.display = 'none';
+                planetsContainer.classList.add('revealed');
+            }, 400);
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
