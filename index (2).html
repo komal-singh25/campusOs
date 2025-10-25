@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galaxy Campus Hub - College Management System</title>
+    <style>
+        :root {
+            --color-primary: #8b5cf6;
+            --color-secondary: #ec4899;
+            --color-accent: #06b6d4;
+            --color-bg-dark: #0f0820;
+            --color-bg-darker: #050210;
+            --color-text: #e0e7ff;
+            --color-text-dim: #a5b4fc;
+            --color-card: rgba(88, 28, 135, 0.2);
+            --color-card-border: rgba(139, 92, 246, 0.3);
+            --glow-purple: 0 0 20px rgba(139, 92, 246, 0.5);
+            --glow-pink: 0 0 20px rgba(236, 72, 153, 0.5);
+            --glow-cyan: 0 0 20px rgba(6, 182, 212, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--color-bg-darker);
+            color: var(--color-text);
+            overflow-x: hidden;
+        }
+
+        /* Animated Galaxy Background */
+        .galaxy-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(15, 8, 32, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--color-card-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: var(--glow-purple);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--color-text);
+            text-decoration: none;
+            transition: all 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .nav-links a:hover {
+            color: var(--color-primary);
+            background: var(--color-card);
+            box-shadow: var(--glow-purple);
+        }
+
+        .user-badge {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--glow-purple);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Login Screen */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .login-card {
+            background: var(--color-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--color-card-border);
+            border-radius: 20px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: var(--glow-purple);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .login-card h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--color-text-dim);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--color-card-border);
+            border-radius: 8px;
+            color: var(--color-text);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: var(--glow-purple);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: white;
+            box-shadow: var(--glow-purple);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glow-pink);
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--color-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--color-card-border);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--glow-purple);
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-card p {
+            color: var(--color-text-dim);
+        }
+
+        /* 3D Map Container */
+        .map-container {
+            background: var(--color-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--color-card-border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--glow-purple);
+        }
+
+        .map-container h2 {
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #campus-3d-map {
+            width: 100%;
+            height: 600px;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Event Cards */
+        .events-section {
+            background: var(--color-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--color-card-border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .event-card {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid var(--color-card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .event-card:hover {
+            transform: translateX(10px);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .event-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge-academic { background: linear-gradient(135deg, #3b82f6, #06b6d4); }
+        .badge-cultural { background: linear-gradient(135deg, #ec4899, #f43f5e); }
+        .badge-sports { background: linear-gradient(135deg, #10b981, #14b8a6); }
+        .badge-club { background: linear-gradient(135deg, #f59e0b, #f97316); }
+
+        /* Complaints Section */
+        .complaint-form {
+            background: var(--color-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--color-card-border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .status-pending { background: linear-gradient(135deg, #f59e0b, #f97316); }
+        .status-progress { background: linear-gradient(135deg, #3b82f6, #06b6d4); }
+        .status-resolved { background: linear-gradient(135deg, #10b981, #14b8a6); }
+
+        .priority-high { border-left: 4px solid #ef4444; }
+        .priority-medium { border-left: 4px solid #f59e0b; }
+        .priority-low { border-left: 4px solid #10b981; }
+
+        /* Resource Library */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .resource-card {
+            background: var(--color-card);
+            border: 1px solid var(--color-card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .resource-card:hover {
+            transform: scale(1.05);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .version-badge {
+            background: linear-gradient(135deg, var(--color-accent), #0891b2);
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            margin-left: 0.5rem;
+        }
+
+        /* Hidden class */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Loading Animation */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            border: 4px solid rgba(139, 92, 246, 0.1);
+            border-top: 4px solid var(--color-primary);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Galaxy Background -->
+    <div class="galaxy-bg">
+        <div class="stars" id="stars"></div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-container">
+        <div class="login-card">
+            <h2>🌌 Galaxy Campus Hub</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="role">Select Role</label>
+                    <select id="role" class="form-control" required>
+                        <option value="student">Student</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" class="form-control" placeholder="Enter username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Enter password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login to Galaxy Hub</button>
+            </form>
+            <p style="text-align: center; margin-top: 1rem; color: var(--color-text-dim); font-size: 0.85rem;">
+                Demo: student/student123 or admin/admin123
+            </p>
+        </div>
+    </div>
+
+    <!-- Student Dashboard -->
+    <div id="student-dashboard" class="hidden">
+        <nav>
+            <div class="logo">🌌 Galaxy Campus Hub</div>
+            <ul class="nav-links">
+                <li><a href="#" onclick="showSection('dashboard')">Dashboard</a></li>
+                <li><a href="#" onclick="showSection('events')">Events</a></li>
+                <li><a href="#" onclick="showSection('complaints')">Complaints</a></li>
+                <li><a href="#" onclick="showSection('resources')">Resources</a></li>
+                <li><a href="#" onclick="showSection('attendance')">Attendance</a></li>
+            </ul>
+            <div class="user-badge">
+                <span>👨‍🎓</span>
+                <span id="student-name">Student</span>
+                <button onclick="logout()" style="background: none; border: none; color: white; cursor: pointer; margin-left: 1rem;">Logout</button>
+            </div>
+        </nav>
+
+        <div class="container">
+            <!-- Dashboard Section -->
+            <div id="section-dashboard">
+                <h1 style="margin-bottom: 2rem;">Welcome to Your Galaxy Dashboard</h1>
+                
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <h3>8</h3>
+                        <p>Upcoming Events</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>85%</h3>
+                        <p>Attendance</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>3</h3>
+                        <p>Active Complaints</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>24</h3>
+                        <p>Resources Available</p>
+                    </div>
+                </div>
+
+                <!-- 3D Campus Map -->
+                <div class="map-container">
+                    <h2>🚀 Live Campus Event Map</h2>
+                    <div id="campus-3d-map"></div>
+                </div>
+
+                <!-- Recent Events -->
+                <div class="events-section">
+                    <h2>🌟 Upcoming Events</h2>
+                    <div id="events-list"></div>
+                </div>
+            </div>
+
+            <!-- Events Section -->
+            <div id="section-events" class="hidden">
+                <h1 style="margin-bottom: 2rem;">All Events</h1>
+                <div class="events-section">
+                    <div id="all-events-list"></div>
+                </div>
+            </div>
+
+            <!-- Complaints Section -->
+            <div id="section-complaints" class="hidden">
+                <h1 style="margin-bottom: 2rem;">Smart Complaint System</h1>
+                
+                <div class="complaint-form">
+                    <h3>Submit New Complaint</h3>
+                    <form id="complaint-form">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="complaint-category" class="form-control" required>
+                                <option value="hostel">Hostel</option>
+                                <option value="academics">Academics</option>
+                                <option value="infrastructure">Infrastructure</option>
+                                <option value="food">Food/Mess</option>
+                                <option value="library">Library</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" id="complaint-title" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="complaint-description" class="form-control" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Complaint</button>
+                    </form>
+                </div>
+
+                <div class="events-section">
+                    <h3>Your Complaints</h3>
+                    <div id="complaints-list"></div>
+                </div>
+            </div>
+
+            <!-- Resources Section -->
+            <div id="section-resources" class="hidden">
+                <h1 style="margin-bottom: 2rem;">Resource Library & Course Materials</h1>
+                <div class="resource-grid" id="resources-grid"></div>
+            </div>
+
+            <!-- Attendance Section -->
+            <div id="section-attendance" class="hidden">
+                <h1 style="margin-bottom: 2rem;">Attendance Tracker</h1>
+                <div class="events-section">
+                    <div id="attendance-chart"></div>
+                    <div id="attendance-details"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="admin-dashboard" class="hidden">
+        <nav>
+            <div class="logo">🌌 Galaxy Campus Hub - Admin</div>
+            <ul class="nav-links">
+                <li><a href="#" onclick="showAdminSection('dashboard')">Dashboard</a></li>
+                <li><a href="#" onclick="showAdminSection('events-manage')">Manage Events</a></li>
+                <li><a href="#" onclick="showAdminSection('complaints-manage')">Complaints</a></li>
+                <li><a href="#" onclick="showAdminSection('analytics')">Analytics</a></li>
+            </ul>
+            <div class="user-badge">
+                <span>👨‍💼</span>
+                <span>Admin</span>
+                <button onclick="logout()" style="background: none; border: none; color: white; cursor: pointer; margin-left: 1rem;">Logout</button>
+            </div>
+        </nav>
+
+        <div class="container">
+            <!-- Admin Dashboard Section -->
+            <div id="admin-section-dashboard">
+                <h1 style="margin-bottom: 2rem;">Admin Control Center</h1>
+                
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <h3>1,247</h3>
+                        <p>Total Students</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>23</h3>
+                        <p>Active Events</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>15</h3>
+                        <p>Pending Complaints</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>12</h3>
+                        <p>Active Clubs</p>
+                    </div>
+                </div>
+
+                <!-- 3D Campus Map -->
+                <div class="map-container">
+                    <h2>🚀 Live Campus Event Map</h2>
+                    <div id="admin-campus-3d-map"></div>
+                </div>
+            </div>
+
+            <!-- Manage Events Section -->
+            <div id="admin-section-events-manage" class="hidden">
+                <h1 style="margin-bottom: 2rem;">Event Management</h1>
+                
+                <div class="complaint-form">
+                    <h3>Create New Event</h3>
+                    <form id="admin-event-form">
+                        <div class="form-group">
+                            <label>Event Title</label>
+                            <input type="text" id="event-title" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Event Type</label>
+                            <select id="event-type" class="form-control" required>
+                                <option value="academic">Academic</option>
+                                <option value="cultural">Cultural</option>
+                                <option value="sports">Sports</option>
+                                <option value="club">Club Activity</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Location</label>
+                            <input type="text" id="event-location" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Date & Time</label>
+                            <input type="datetime-local" id="event-datetime" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="event-description" class="form-control" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create Event</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Manage Complaints Section -->
+            <div id="admin-section-complaints-manage" class="hidden">
+                <h1 style="margin-bottom: 2rem;">Complaint Management</h1>
+                <div class="events-section">
+                    <div id="admin-complaints-list"></div>
+                </div>
+            </div>
+
+            <!-- Analytics Section -->
+            <div id="admin-section-analytics" class="hidden">
+                <h1 style="margin-bottom: 2rem;">Analytics & Insights</h1>
+                <div class="events-section">
+                    <h3>System Analytics</h3>
+                    <div id="analytics-charts"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Generate stars
+        function generateStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 200; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+        generateStars();
+
+        // Mock Data
+        let currentUser = null;
+        let events = [
+            {
+                id: 1,
+                title: "AI Workshop",
+                type: "academic",
+                location: "Main Auditorium",
+                date: "2025-10-28",
+                time: "10:00 AM",
+                description: "Learn about the latest AI technologies",
+                lat: -10,
+                lng: -10
+            },
+            {
+                id: 2,
+                title: "Cultural Fest",
+                type: "cultural",
+                location: "Open Ground",
+                date: "2025-10-30",
+                time: "5:00 PM",
+                description: "Annual cultural celebration",
+                lat: 15,
+                lng: 15
+            },
+            {
+                id: 3,
+                title: "Basketball Tournament",
+                type: "sports",
+                location: "Sports Complex",
+                date: "2025-11-02",
+                time: "4:00 PM",
+                description: "Inter-department basketball competition",
+                lat: -15,
+                lng: 15
+            },
+            {
+                id: 4,
+                title: "Coding Club Meetup",
+                type: "club",
+                location: "Lab Building",
+                date: "2025-10-27",
+                time: "6:00 PM",
+                description: "Weekly coding challenge and discussion",
+                lat: 10,
+                lng: -15
+            }
+        ];
+
+        let complaints = [
+            {
+                id: 1,
+                title: "Hostel Wi-Fi not working",
+                category: "hostel",
+                description: "Wi-Fi has been down for 2 days in Block A",
+                status: "pending",
+                priority: "high",
+                date: "2025-10-20"
+            },
+            {
+                id: 2,
+                title: "Library AC issue",
+                category: "infrastructure",
+                description: "Air conditioning not working on 3rd floor",
+                status: "in_progress",
+                priority: "medium",
+                date: "2025-10-22"
+            }
+        ];
+
+        let resources = [
+            {
+                id: 1,
+                title: "Data Structures Notes",
+                subject: "Computer Science",
+                category: "notes",
+                version: "2.1",
+                downloads: 245,
+                rating: 4.8
+            },
+            {
+                id: 2,
+                title: "Physics Lab Manual",
+                subject: "Physics",
+                category: "books",
+                version: "1.5",
+                downloads: 189,
+                rating: 4.6
+            },
+            {
+                id: 3,
+                title: "Calculus Video Lectures",
+                subject: "Mathematics",
+                category: "videos",
+                version: "3.0",
+                downloads: 412,
+                rating: 4.9
+            }
+        ];
+
+        // Login
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const role = document.getElementById('role').value;
+            const username = document.getElementById('username').value;
+            
+            currentUser = { role, username };
+            
+            document.getElementById('login-screen').classList.add('hidden');
+            
+            if (role === 'student') {
+                document.getElementById('student-name').textContent = username;
+                document.getElementById('student-dashboard').classList.remove('hidden');
+                initStudentDashboard();
+            } else {
+                document.getElementById('admin-dashboard').classList.remove('hidden');
+                initAdminDashboard();
+            }
+        });
+
+        // Logout
+        function logout() {
+            currentUser = null;
+            document.getElementById('student-dashboard').classList.add('hidden');
+            document.getElementById('admin-dashboard').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+        }
+
+        // Section Navigation
+        function showSection(section) {
+            ['dashboard', 'events', 'complaints', 'resources', 'attendance'].forEach(s => {
+                document.getElementById('section-' + s).classList.add('hidden');
+            });
+            document.getElementById('section-' + section).classList.remove('hidden');
+        }
+
+        function showAdminSection(section) {
+            ['dashboard', 'events-manage', 'complaints-manage', 'analytics'].forEach(s => {
+                const el = document.getElementById('admin-section-' + s);
+                if (el) el.classList.add('hidden');
+            });
+            document.getElementById('admin-section-' + section).classList.remove('hidden');
+        }
+
+        // Initialize Student Dashboard
+        function initStudentDashboard() {
+            renderEvents();
+            renderAllEvents();
+            renderComplaints();
+            renderResources();
+            renderAttendance();
+            init3DMap('campus-3d-map');
+        }
+
+        // Initialize Admin Dashboard
+        function initAdminDashboard() {
+            renderAdminComplaints();
+            init3DMap('admin-campus-3d-map');
+        }
+
+        // Render Events
+        function renderEvents() {
+            const container = document.getElementById('events-list');
+            container.innerHTML = events.slice(0, 3).map(event => `
+                <div class="event-card">
+                    <span class="event-badge badge-${event.type}">${event.type.toUpperCase()}</span>
+                    <h3>${event.title}</h3>
+                    <p>📍 ${event.location}</p>
+                    <p>📅 ${event.date} at ${event.time}</p>
+                    <p>${event.description}</p>
+                </div>
+            `).join('');
+        }
+
+        function renderAllEvents() {
+            const container = document.getElementById('all-events-list');
+            container.innerHTML = events.map(event => `
+                <div class="event-card">
+                    <span class="event-badge badge-${event.type}">${event.type.toUpperCase()}</span>
+                    <h3>${event.title}</h3>
+                    <p>📍 ${event.location}</p>
+                    <p>📅 ${event.date} at ${event.time}</p>
+                    <p>${event.description}</p>
+                    <button class="btn btn-primary" style="margin-top: 1rem;">Register</button>
+                </div>
+            `).join('');
+        }
+
+        // Render Complaints
+        function renderComplaints() {
+            const container = document.getElementById('complaints-list');
+            container.innerHTML = complaints.map(complaint => `
+                <div class="event-card priority-${complaint.priority}">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <span class="event-badge badge-club">${complaint.category}</span>
+                        <span class="status-badge status-${complaint.status.replace('_', '')}">${complaint.status.replace('_', ' ').toUpperCase()}</span>
+                    </div>
+                    <h4>${complaint.title}</h4>
+                    <p>${complaint.description}</p>
+                    <p style="font-size: 0.85rem; color: var(--color-text-dim);">Priority: ${complaint.priority} | ${complaint.date}</p>
+                </div>
+            `).join('');
+        }
+
+        function renderAdminComplaints() {
+            const container = document.getElementById('admin-complaints-list');
+            container.innerHTML = complaints.map(complaint => `
+                <div class="event-card priority-${complaint.priority}">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <span class="event-badge badge-club">${complaint.category}</span>
+                        <span class="status-badge status-${complaint.status.replace('_', '')}">${complaint.status.replace('_', ' ').toUpperCase()}</span>
+                    </div>
+                    <h4>${complaint.title}</h4>
+                    <p>${complaint.description}</p>
+                    <p style="font-size: 0.85rem; color: var(--color-text-dim);">Priority: ${complaint.priority} | ${complaint.date}</p>
+                    <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+                        <button class="btn btn-primary" style="padding: 0.5rem 1rem; width: auto;" onclick="updateComplaintStatus(${complaint.id}, 'in_progress')">In Progress</button>
+                        <button class="btn btn-primary" style="padding: 0.5rem 1rem; width: auto;" onclick="updateComplaintStatus(${complaint.id}, 'resolved')">Resolve</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateComplaintStatus(id, status) {
+            const complaint = complaints.find(c => c.id === id);
+            if (complaint) {
+                complaint.status = status;
+                renderAdminComplaints();
+                alert(`Complaint #${id} status updated to ${status}`);
+            }
+        }
+
+        // Render Resources
+        function renderResources() {
+            const container = document.getElementById('resources-grid');
+            container.innerHTML = resources.map(resource => `
+                <div class="resource-card">
+                    <h4>${resource.title}<span class="version-badge">v${resource.version}</span></h4>
+                    <p style="color: var(--color-text-dim);">${resource.subject}</p>
+                    <p style="margin: 1rem 0;">⭐ ${resource.rating} | 📥 ${resource.downloads} downloads</p>
+                    <button class="btn btn-primary">Download</button>
+                </div>
+            `).join('');
+        }
+
+        // Render Attendance
+        function renderAttendance() {
+            const container = document.getElementById('attendance-details');
+            const courses = [
+                { name: "Data Structures", present: 20, total: 24, percentage: 83 },
+                { name: "Algorithms", present: 22, total: 24, percentage: 92 },
+                { name: "Database Systems", present: 18, total: 24, percentage: 75 },
+                { name: "Web Development", present: 21, total: 24, percentage: 88 }
+            ];
+
+            container.innerHTML = `
+                <h3 style="margin-bottom: 1rem;">Course-wise Attendance</h3>
+                ${courses.map(course => `
+                    <div class="event-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h4>${course.name}</h4>
+                                <p>${course.present} / ${course.total} classes</p>
+                            </div>
+                            <div style="text-align: right;">
+                                <h3 style="background: linear-gradient(135deg, ${course.percentage >= 75 ? '#10b981' : '#ef4444'}, #14b8a6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">${course.percentage}%</h3>
+                            </div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.1); height: 10px; border-radius: 5px; margin-top: 0.5rem; overflow: hidden;">
+                            <div style="background: linear-gradient(135deg, ${course.percentage >= 75 ? '#10b981' : '#ef4444'}, #14b8a6); height: 100%; width: ${course.percentage}%;"></div>
+                        </div>
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        // Submit Complaint
+        document.getElementById('complaint-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const newComplaint = {
+                id: complaints.length + 1,
+                title: document.getElementById('complaint-title').value,
+                category: document.getElementById('complaint-category').value,
+                description: document.getElementById('complaint-description').value,
+                status: 'pending',
+                priority: 'medium',
+                date: new Date().toISOString().split('T')[0]
+            };
+            
+            complaints.unshift(newComplaint);
+            renderComplaints();
+            
+            alert('Complaint submitted successfully! Our AI has analyzed and prioritized your request.');
+            this.reset();
+        });
+
+        // Create Event (Admin)
+        document.getElementById('admin-event-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const newEvent = {
+                id: events.length + 1,
+                title: document.getElementById('event-title').value,
+                type: document.getElementById('event-type').value,
+                location: document.getElementById('event-location').value,
+                date: document.getElementById('event-datetime').value.split('T')[0],
+                time: document.getElementById('event-datetime').value.split('T')[1],
+                description: document.getElementById('event-description').value,
+                lat: Math.random() * 30 - 15,
+                lng: Math.random() * 30 - 15
+            };
+            
+            events.unshift(newEvent);
+            
+            alert('Event created successfully and broadcasted to all students!');
+            this.reset();
+            
+            // Reinitialize 3D map with new event
+            init3DMap('admin-campus-3d-map');
+        });
+
+        // 3D Campus Map using Three.js
+        function init3DMap(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0515);
+            scene.fog = new THREE.Fog(0x0a0515, 50, 200);
+            
+            const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(30, 35, 30);
+            
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.shadowMap.enabled = true;
+            container.appendChild(renderer.domElement);
+            
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0x8b5cf6, 0.5);
+            scene.add(ambientLight);
+            
+            const pointLight1 = new THREE.PointLight(0xec4899, 2, 100);
+            pointLight1.position.set(20, 20, 20);
+            scene.add(pointLight1);
+            
+            const pointLight2 = new THREE.PointLight(0x06b6d4, 2, 100);
+            pointLight2.position.set(-20, 20, -20);
+            scene.add(pointLight2);
+            
+            // Ground with galaxy effect
+            const groundGeometry = new THREE.CircleGeometry(40, 64);
+            const groundMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x1a0b2e,
+                emissive: 0x8b5cf6,
+                emissiveIntensity: 0.2,
+                roughness: 0.8
+            });
+            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.rotation.x = -Math.PI / 2;
+            ground.receiveShadow = true;
+            scene.add(ground);
+            
+            // Grid with neon effect
+            const gridHelper = new THREE.GridHelper(80, 40, 0x8b5cf6, 0xec4899);
+            gridHelper.material.opacity = 0.3;
+            gridHelper.material.transparent = true;
+            scene.add(gridHelper);
+            
+            // Campus buildings with neon glow
+            const buildings = [
+                { x: -15, z: -15, width: 10, height: 15, depth: 8, color: 0x8b5cf6, name: 'Main Building' },
+                { x: 15, z: -15, width: 8, height: 12, depth: 8, color: 0xec4899, name: 'Library' },
+                { x: -15, z: 15, width: 9, height: 10, depth: 7, color: 0x06b6d4, name: 'Labs' },
+                { x: 15, z: 15, width: 7, height: 18, depth: 7, color: 0xa855f7, name: 'Admin' },
+                { x: 0, z: 0, width: 12, height: 6, depth: 10, color: 0x6366f1, name: 'Auditorium' }
+            ];
+            
+            buildings.forEach(building => {
+                const geometry = new THREE.BoxGeometry(building.width, building.height, building.depth);
+                const material = new THREE.MeshStandardMaterial({ 
+                    color: building.color,
+                    emissive: building.color,
+                    emissiveIntensity: 0.3,
+                    roughness: 0.5,
+                    metalness: 0.7
+                });
+                const mesh = new THREE.Mesh(geometry, material);
+                mesh.position.set(building.x, building.height / 2, building.z);
+                mesh.castShadow = true;
+                mesh.receiveShadow = true;
+                scene.add(mesh);
+                
+                // Edge glow
+                const edges = new THREE.EdgesGeometry(geometry);
+                const edgeMaterial = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2 });
+                const edgeLines = new THREE.LineSegments(edges, edgeMaterial);
+                mesh.add(edgeLines);
+            });
+            
+            // Event markers with glowing effect
+            const eventMarkers = [];
+            events.forEach((event, index) => {
+                const colors = {
+                    'academic': 0x3b82f6,
+                    'cultural': 0xec4899,
+                    'sports': 0x10b981,
+                    'club': 0xf59e0b
+                };
+                
+                const geometry = new THREE.ConeGeometry(1.2, 4, 8);
+                const material = new THREE.MeshStandardMaterial({ 
+                    color: colors[event.type] || 0x8b5cf6,
+                    emissive: colors[event.type] || 0x8b5cf6,
+                    emissiveIntensity: 0.8,
+                    transparent: true,
+                    opacity: 0.9
+                });
+                
+                const marker = new THREE.Mesh(geometry, material);
+                marker.position.set(event.lat, 6, event.lng);
+                marker.userData = { phase: Math.random() * Math.PI * 2 };
+                scene.add(marker);
+                eventMarkers.push(marker);
+                
+                // Add glowing sphere on top
+                const sphereGeometry = new THREE.SphereGeometry(0.6, 16, 16);
+                const sphereMaterial = new THREE.MeshBasicMaterial({ 
+                    color: colors[event.type] || 0x8b5cf6,
+                    transparent: true,
+                    opacity: 0.6
+                });
+                const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+                sphere.position.set(0, 2.5, 0);
+                marker.add(sphere);
+            });
+            
+            // Particle system for galaxy effect
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCnt = 1000;
+            const posArray = new Float32Array(particlesCnt * 3);
+            
+            for(let i = 0; i < particlesCnt * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 100;
+            }
+            
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 0.1,
+                color: 0x8b5cf6,
+                transparent: true,
+                opacity: 0.8
+            });
+            
+            const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particlesMesh);
+            
+            // Animation
+            let time = 0;
+            function animate() {
+                requestAnimationFrame(animate);
+                time += 0.01;
+                
+                // Animate event markers
+                eventMarkers.forEach((marker, index) => {
+                    marker.position.y = 6 + Math.sin(time * 2 + marker.userData.phase) * 0.8;
+                    marker.rotation.y += 0.02;
+                });
+                
+                // Rotate lights
+                pointLight1.position.x = Math.sin(time * 0.5) * 25;
+                pointLight1.position.z = Math.cos(time * 0.5) * 25;
+                pointLight2.position.x = Math.sin(time * 0.5 + Math.PI) * 25;
+                pointLight2.position.z = Math.cos(time * 0.5 + Math.PI) * 25;
+                
+                // Rotate particles
+                particlesMesh.rotation.y += 0.0005;
+                
+                // Auto-rotate camera
+                camera.position.x = Math.sin(time * 0.1) * 35;
+                camera.position.z = Math.cos(time * 0.1) * 35;
+                camera.lookAt(0, 0, 0);
+                
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            // Handle resize
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+        }
+    </script>
+</body>
+</html>
